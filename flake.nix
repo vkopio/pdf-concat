@@ -17,6 +17,7 @@
         cargo
         just
         lld
+        nodejs_22
         pdfium-binaries
         rust-analyzer
         rustc
