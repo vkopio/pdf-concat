@@ -1,6 +1,7 @@
 /data
 /pkg
 /release
+/result
 /target
 .direnv
 .envrc
