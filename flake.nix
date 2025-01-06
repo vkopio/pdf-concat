@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self , nixpkgs ,... }:
+  outputs = { self, nixpkgs, ... }:
   let
     system = "x86_64-linux";
   in {
@@ -16,7 +16,12 @@
       nativeBuildInputs = with pkgs; [
         cargo
         just
+        lld
         pdfium-binaries
+        rust-analyzer
+        rustc
+        rustfmt
+        rustup
       ];
 
       LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath nativeBuildInputs;
