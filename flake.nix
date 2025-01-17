@@ -8,7 +8,6 @@
       url = "github:oxalica/rust-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
       };
     };
   };
@@ -25,7 +24,6 @@
       let
         pname = "pdf-concat";
         version = "0.1.0";
-        src = ./.;
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs {
           inherit system overlays;
@@ -35,10 +33,11 @@
 
         nativeBuildInputs = with pkgs; [
           rustToolchain
+          cargo-watch
           just
           lld
           nodejs_22
-          pdfium-binaries
+          parallel
           pkg-config
           wasm-pack
         ];

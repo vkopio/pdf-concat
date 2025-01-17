@@ -1,6 +1,12 @@
 _default:
     just --list
 
+run:
+    #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
+    cargo watch -w src -w "Cargo.toml" -w "Cargo.lock" -s "wasm-pack build --out-dir target/pkg --target web"
+    npm run dev
+
+
 build: build-wasm build-frontend
 
 build-frontend:
