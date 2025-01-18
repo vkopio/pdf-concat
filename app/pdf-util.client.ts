@@ -3,21 +3,14 @@ import bindModuleInit, {
   log_page_metrics_to_console,
 } from "pdfium-bindings/pdf_concat";
 
-export default window.PDFiumModule().then((pdfiumModule) => {
-  console.log(pdfiumModule)
+const initPdfium = window.PDFiumModule().then(async (pdfiumModule) => {
+  console.log(pdfiumModule);
 
-  bindModuleInit(`${window.location.origin}/assets/pdf_concat_bg.wasm`).then(async bindModule => {
-    console.assert(
-      initialize_pdfium_render(
-        pdfiumModule,
-        bindModule,
-        false,
-      ),
-      "Initialization of pdfium-render failed!"
-    );
-
-    const targetDocument = "./test.pdf";
-
-    await log_page_metrics_to_console(targetDocument);
-  });
+  const bindModule = await bindModuleInit(`${window.location.origin}/assets/pdf_concat_bg.wasm`);
+  initialize_pdfium_render(pdfiumModule, bindModule, false);
 });
+
+export async function logPageMetrics(blob: Blob) {
+  await initPdfium;
+  await log_page_metrics_to_console(blob);
+}

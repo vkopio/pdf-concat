@@ -5,7 +5,7 @@ use pdfium_render::prelude::*;
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
-use web_sys::ImageData;
+use web_sys::Blob;
 
 // See https://github.com/ajrcarey/pdfium-render/tree/master/examples for information
 // on how to build and package this example alongside a WASM build of Pdfium, suitable
@@ -15,15 +15,13 @@ use web_sys::ImageData;
 /// each page in the document, along with other document metrics, to the Javascript console.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub async fn log_page_metrics_to_console(url: String) {
+pub async fn log_page_metrics_to_console(blob: Blob) {
     let pdfium = Pdfium::default();
 
-    let document = pdfium.load_pdf_from_fetch(url, None).await.unwrap();
+    let document = pdfium.load_pdf_from_blob(blob, None).await.unwrap();
 
     // Output metadata and form information for the PDF file to the console.
-
     log::info!("PDF file version: {:#?}", document.version());
-
     log::info!("PDF metadata tags:");
 
     document
@@ -109,33 +107,4 @@ pub async fn log_page_metrics_to_console(url: String) {
             );
         }
     });
-}
-
-/// Downloads the given URL, opens it as a PDF document, then returns the ImageData for
-/// the given page index using the given bitmap dimensions.
-#[cfg(target_arch = "wasm32")]
-#[wasm_bindgen]
-pub async fn get_image_data_for_page(
-    url: String,
-    index: PdfPageIndex,
-    width: Pixels,
-    height: Pixels,
-) -> ImageData {
-    Pdfium::default()
-        .load_pdf_from_fetch(url, None)
-        .await
-        .unwrap()
-        .pages()
-        .get(index)
-        .unwrap()
-        .render_with_config(
-            &PdfRenderConfig::new()
-                .set_target_size(width, height)
-                .render_form_data(true)
-                .highlight_text_form_fields(PdfColor::YELLOW.with_alpha(128))
-                .highlight_checkbox_form_fields(PdfColor::BLUE.with_alpha(128)),
-        )
-        .unwrap()
-        .as_image_data()
-        .unwrap()
 }

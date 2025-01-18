@@ -8,8 +8,6 @@ import {
 import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 
-import "./pdf-util.client";
-
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
