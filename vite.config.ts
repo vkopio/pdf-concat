@@ -26,11 +26,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'target/pkg-web/pdf_concat_bg.wasm',
-          dest: 'assets'
-        },
-        {
-          src: 'target/pkg-web/pdf_concat.js',
+          src: 'target/pkg/pdf_concat_bg.wasm',
           dest: 'assets'
         },
         {
@@ -47,7 +43,7 @@ export default defineConfig({
   resolve: {
     alias: {
       'pdfium': fileURLToPath(new URL('target/pdfium', import.meta.url)),
-      'pdfium-bindings': fileURLToPath(new URL('target/pkg-web/', import.meta.url)),
+      'pdfium-bindings': fileURLToPath(new URL('target/pkg/', import.meta.url)),
     }
   },
 });
