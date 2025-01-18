@@ -15,3 +15,6 @@ build-frontend:
 
 build-wasm:
     wasm-pack build --out-dir target/pkg-web --target web
+
+copy-pdfium:
+    cp -r $PDFIUM_PATH/node ./target/pdfium

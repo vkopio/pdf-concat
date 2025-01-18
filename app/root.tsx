@@ -6,7 +6,12 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-
+import * as PDFiumModule from "pdfium/pdfium";
+import wasm_bindgen, {
+  initialize_pdfium_render,
+  log_page_metrics_to_console,
+} from "pdfium-bindings/pdf_concat";
+import { useEffect } from "react";
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -22,7 +27,27 @@ export const links: LinksFunction = () => [
   },
 ];
 
+const wasm = () => wasm_bindgen(`${window.location.origin}/assets/pdf_concat_bg.wasm`).then(async rustModule => {
+  console.assert(
+    initialize_pdfium_render(
+      PDFiumModule,
+      rustModule,
+      false,
+    ),
+    "Initialization of pdfium-render failed!"
+  );
+
+  const targetDocument = "./test.pdf";
+
+  await log_page_metrics_to_console(targetDocument);
+});
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    console.log(window.location.origin);
+    wasm()
+  }, []);
+
   return (
     <html lang="en">
       <head>
