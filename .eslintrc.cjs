@@ -58,6 +58,12 @@ module.exports = {
           typescript: {
             alwaysTryTypes: true,
           },
+          alias: {
+            map: [
+              ['@pdfium-bindings', './target/pkg'],
+            ],
+            extensions: ['.js', '.jsx', '.ts', '.d.ts', '.tsx'],
+          },
         },
       },
       extends: [

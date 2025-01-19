@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
 
 const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   console.log(e.target.files);
-  const files = e.target.files ?? new FileList();
+  const files = Array.from(e.target.files ?? []);
 
   for (const file of files) {
     await logPageMetrics(file);

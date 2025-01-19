@@ -42,8 +42,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'pdfium': fileURLToPath(new URL('target/pdfium', import.meta.url)),
-      'pdfium-bindings': fileURLToPath(new URL('target/pkg/', import.meta.url)),
+      '@pdfium-bindings': fileURLToPath(new URL('target/pkg/', import.meta.url)),
     }
   },
 });

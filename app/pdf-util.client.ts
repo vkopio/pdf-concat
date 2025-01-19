@@ -2,8 +2,9 @@ import bindModuleInit, {
   initialize_pdfium_render,
   log_page_metrics_to_console,
   concat,
-} from "pdfium-bindings/pdf_concat";
+} from "@pdfium-bindings/pdf_concat";
 
+// @ts-expect-error The PDFiumModule is initialized dynamically in root.tsx.
 const initPdfium = window.PDFiumModule().then(async (pdfiumModule) => {
   console.log(pdfiumModule);
 
@@ -16,7 +17,7 @@ export async function logPageMetrics(blob: Blob) {
   await log_page_metrics_to_console(blob);
 }
 
-export async function concatPdfs(blobs: FileList) {
+export async function concatPdfs(blobs: Blob[]) {
   await initPdfium;
   const result = await concat(blobs);
 
