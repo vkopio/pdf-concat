@@ -68,7 +68,6 @@ export default function PDFConcatenator() {
 
     return (
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>File Order</TableHead>
