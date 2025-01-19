@@ -1,4 +1,5 @@
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -23,15 +24,23 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="flex min-h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="flex flex-col flex-grow">
+        <header className="flex flex-row w-full p-6">
+          <Link to="/" className="flex-1 font-bold text-lg">PDF Concatenator</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+        </header>
+        <div className="flex flex-1 flex-grow items-center justify-center px-6">
+          <div className="flex flex-col items-center gap-10 max-w-screen-md w-full">
+            {children}
+          </div >
+        </div >
         <ScrollRestoration />
         <Scripts />
         <script src="assets/pdfium.js"></script>

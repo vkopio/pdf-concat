@@ -139,46 +139,43 @@ export default function PDFConcatenator() {
     );
   };
 
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="flex flex-col items-center gap-16">
-        <Dropzone
-          onDrop={onFilesSelected}
-          accept={{
-            'application/pdf': []
-          }}
-          multiple>
-          {({ getRootProps, getInputProps }) => (
-            <header {...getRootProps()} className="w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary">
-              <input {...getInputProps()} />
-              <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-                Drop PDF files here, or click to select.
-              </h1>
-            </header>
-          )}
-        </Dropzone>
-
-        {fileSelections.length != 0 && <>
-          <div className="w-full">
-            <div className="py-1">Name of the new file:</div>
-            <div className="flex w-full items-center space-x-1">
-              <Input
-                className="flex-1"
-                value={fileName}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
-                type="text"
-                placeholder="New file name" />
-              <span className="flex-none">.pdf</span>
-            </div>
+  return (<>
+    <Dropzone
+      onDrop={onFilesSelected}
+      accept={{
+        'application/pdf': []
+      }}
+      multiple>
+      {({ getRootProps, getInputProps }) => (
+        <header {...getRootProps()} className="w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary">
+          <input {...getInputProps()} />
+          <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
+            Drop PDF files here, or click to select.
+          </h1>
+        </header>
+      )}
+    </Dropzone>
+    {
+      fileSelections.length != 0 && <>
+        <div className="w-full">
+          <div className="py-1">Name of the new file:</div>
+          <div className="flex w-full items-center space-x-1">
+            <Input
+              className="flex-1"
+              value={fileName}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+              type="text"
+              placeholder="New file name" />
+            <span className="flex-none">.pdf</span>
           </div>
-          <FileListing />
-          <Button
-            disabled={fileSelections.length === 0}
-            onClick={onConcatenate}>
-            CONCATENATE
-          </Button>
-        </>}
-      </div>
-    </div>
-  );
+        </div>
+        <FileListing />
+        <Button
+          disabled={fileSelections.length === 0}
+          onClick={onConcatenate}>
+          CONCATENATE
+        </Button>
+      </>
+    }
+  </>);
 }
