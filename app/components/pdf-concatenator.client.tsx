@@ -71,7 +71,13 @@ export default function PDFConcatenator() {
   };
 
   const onFileSelectionRemoved = (index: number) => {
-    setFileSelections([...fileSelections.slice(0, index), ...fileSelections.slice(index + 1)]);
+    const newFileSelections = [...fileSelections.slice(0, index), ...fileSelections.slice(index + 1)];
+
+    setFileSelections(newFileSelections);
+
+    if (newFileSelections.length == 0) {
+      setFileName("");
+    }
   };
 
   const moveUp = (index: number) => {
