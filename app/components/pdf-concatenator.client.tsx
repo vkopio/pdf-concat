@@ -3,9 +3,10 @@ import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
 
-import { getPageCount, concatPdfs } from "~/pdf-util.client";
+import { getPageCount, concatPdfs } from "~/lib/pdf.client";
+import { generateNewFileName } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input"
+import { Input } from "~/components/ui/input";
 import {
   Table,
   TableBody,
@@ -13,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table"
+} from "~/components/ui/table";
 
 interface FileSelection {
   file: File;
@@ -24,18 +25,6 @@ interface FileSelection {
 
 function fileSelectionsToFiles(fileSelections: FileSelection[]) {
   return fileSelections.map((selection) => selection.file);
-}
-
-function determineFileNameSeparator(name: string): string {
-  if (name.includes(" ")) {
-    return " ";
-  }
-
-  if (name.includes("_")) {
-    return "_";
-  }
-
-  return "-";
 }
 
 export default function PDFConcatenator() {
@@ -62,11 +51,8 @@ export default function PDFConcatenator() {
 
     if (fileName === "") {
       const firstFile = acceptedFiles[0];
-      console.log(firstFile)
-      const name = firstFile.name.substring(0, firstFile.name.lastIndexOf('.'));
-      const separator = determineFileNameSeparator(firstFile.name);
 
-      setFileName(`${name}${separator}with${separator}attachments`)
+      setFileName(generateNewFileName(firstFile.name));
     }
 
     const newFileSelections: FileSelection[] = [];
@@ -106,8 +92,7 @@ export default function PDFConcatenator() {
 
   const FileListing = () => {
     if (fileSelections.length === 0) {
-      return <>
-      </>;
+      return <></>;
     }
 
     return (
@@ -164,29 +149,31 @@ export default function PDFConcatenator() {
           }}
           multiple>
           {({ getRootProps, getInputProps }) => (
-            <header {...getRootProps()} className="flex flex-col items-center gap-9 cursor-pointer p-10 border-2 border-dashed border-white">
+            <header {...getRootProps()} className="flex flex-col items-center gap-9 cursor-pointer p-10 border-2 border-dashed border-primary">
               <input {...getInputProps()} />
               <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-                Drag&apos;n&apos;drop some files here, or click to select files
+                Drop PDF files here, or click to select.
               </h1>
             </header>
           )}
         </Dropzone>
 
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <Input
-            value={fileName}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
-            type="text"
-            placeholder="Name of the new PDF file" />
-          <span>.pdf</span>
-        </div>
-        <FileListing />
-        <Button
-          disabled={fileSelections.length === 0}
-          onClick={onConcatenate}>
-          CONCATENATE
-        </Button>
+        {fileSelections.length != 0 && <>
+          <div className="flex w-full max-w-sm items-center space-x-2">
+            <Input
+              value={fileName}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+              type="text"
+              placeholder="New file name" />
+            <span>.pdf</span>
+          </div>
+          <FileListing />
+          <Button
+            disabled={fileSelections.length === 0}
+            onClick={onConcatenate}>
+            CONCATENATE
+          </Button>
+        </>}
       </div>
     </div>
   );

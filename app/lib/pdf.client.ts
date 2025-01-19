@@ -3,6 +3,7 @@ import bindModuleInit, {
   get_page_count,
   concat,
 } from "@pdfium-bindings/pdf_concat";
+import { generateNewFileName } from "./utils";
 
 // @ts-expect-error The PDFiumModule is initialized dynamically in root.tsx.
 const initPdfium = window.PDFiumModule().then(async (pdfiumModule) => {
@@ -17,11 +18,14 @@ export async function getPageCount(blob: Blob): Promise<number> {
   return await get_page_count(blob);
 }
 
-export async function concatPdfs(fileName: string, blobs: Blob[]) {
+export async function concatPdfs(requestedFileName: string, files: File[]) {
   await initPdfium;
-  const result = await concat(blobs);
 
-  console.log(result);
+  const result = await concat(files);
+
+  const fileName = requestedFileName !== ""
+    ? requestedFileName
+    : generateNewFileName(files[0].name);
 
   const file = new File([result], `${fileName}.pdf`, { type: 'application/pdf' });
   const tempLink = document.createElement("a");
