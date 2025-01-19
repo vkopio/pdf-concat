@@ -36,8 +36,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Link to="/" className="flex-1 font-bold text-lg hover:underline">PDF Concatenator</Link>
           <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
         </header>
-        <div className="flex flex-1 flex-grow items-center justify-center px-6">
-          <div className="flex flex-col items-center gap-10 max-w-screen-md w-full">
+        <div className="flex flex-1 justify-center px-6">
+          <div className="flex flex-col items-center gap-10 max-w-screen-md w-full pt-10">
             {children}
           </div >
         </div >
