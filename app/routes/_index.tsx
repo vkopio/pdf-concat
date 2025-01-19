@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 
-import { logPageMetrics } from "../pdf-util.client";
+import { logPageMetrics, concatPdfs } from "../pdf-util.client";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,10 +11,14 @@ export const meta: MetaFunction = () => {
 
 const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   console.log(e.target.files);
-  const files = e.target.files ?? [];
+  const files = e.target.files ?? new FileList();
 
   for (const file of files) {
     await logPageMetrics(file);
+  }
+
+  if (files.length > 0) {
+    concatPdfs(files);
   }
 };
 
