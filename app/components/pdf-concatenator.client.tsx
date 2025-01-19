@@ -28,6 +28,7 @@ function fileSelectionsToFiles(fileSelections: FileSelection[]) {
 }
 
 export default function PDFConcatenator() {
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
   const [fileSelections, setFileSelections] = useState<FileSelection[]>([]);
 
@@ -139,15 +140,22 @@ export default function PDFConcatenator() {
     );
   };
 
+  const dropzoneBaseClasses = "w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary rounded-md hover:bg-gray-200";
+  const dropzoneDragClass = " bg-gray-200";
+
   return (<>
     <Dropzone
       onDrop={onFilesSelected}
+      onDragEnter={() => setIsDragging(true)}
+      onDragLeave={() => setIsDragging(false)}
+      onDropAccepted={() => setIsDragging(false)}
+      onDropRejected={() => setIsDragging(false)}
       accept={{
         'application/pdf': []
       }}
       multiple>
       {({ getRootProps, getInputProps }) => (
-        <header {...getRootProps()} className="w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary">
+        <header {...getRootProps()} className={isDragging ? `${dropzoneBaseClasses}${dropzoneDragClass}` : dropzoneBaseClasses}>
           <input {...getInputProps()} />
           <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
             Drop PDF files here, or click to select.
