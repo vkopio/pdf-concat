@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
-import { Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
 
 import { getPageCount, concatPdfs } from "../pdf-util.client";
 import { Button } from "~/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -60,6 +59,24 @@ export default function PDFConcatenator() {
     setFileSelections([...fileSelections.slice(0, index), ...fileSelections.slice(index + 1)]);
   };
 
+  const moveUp = (index: number) => {
+    if (index === 0) return;
+
+    const newList = [...fileSelections];
+    [newList[index], newList[index - 1]] = [newList[index - 1], newList[index]];
+
+    setFileSelections(newList);
+  };
+
+  const moveDown = (index: number) => {
+    if (index === fileSelections.length - 1) return;
+
+    const newList = [...fileSelections];
+    [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
+
+    setFileSelections(newList);
+  };
+
   const FileListing = () => {
     if (fileSelections.length === 0) {
       return <>
@@ -73,7 +90,7 @@ export default function PDFConcatenator() {
             <TableHead>File Order</TableHead>
             <TableHead>Page Count</TableHead>
             <TableHead>Page Selection</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -82,7 +99,27 @@ export default function PDFConcatenator() {
               <TableCell>{fileSelection.file.name}</TableCell>
               <TableCell>{fileSelection.pageCount}</TableCell>
               <TableCell>{fileSelection.pageSelection ?? "All"}</TableCell>
-              <TableCell className="text-right"><button onClick={() => onFileSelectionRemoved(index)}><Trash2 /></button></TableCell>
+              <TableCell className="text-right">
+                <Button
+                  variant="ghost"
+                  className="disabled:opacity-0"
+                  onClick={() => moveUp(index)}
+                  disabled={index === 0}>
+                  <ArrowUp />
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="disabled:opacity-0"
+                  onClick={() => moveDown(index)}
+                  disabled={index === fileSelections.length - 1}>
+                  <ArrowDown />
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => onFileSelectionRemoved(index)}>
+                  <Trash2 />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

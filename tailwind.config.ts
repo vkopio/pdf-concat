@@ -66,5 +66,8 @@ export default {
 			}
 		}
 	},
+	variants: {
+		color: ({ after }) => after(['disabled'])
+	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
