@@ -3,8 +3,9 @@ import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
 
-import { getPageCount, concatPdfs } from "../pdf-util.client";
+import { getPageCount, concatPdfs } from "~/pdf-util.client";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input"
 import {
   Table,
   TableBody,
@@ -25,12 +26,25 @@ function fileSelectionsToFiles(fileSelections: FileSelection[]) {
   return fileSelections.map((selection) => selection.file);
 }
 
+function determineFileNameSeparator(name: string): string {
+  if (name.includes(" ")) {
+    return " ";
+  }
+
+  if (name.includes("_")) {
+    return "_";
+  }
+
+  return "-";
+}
+
 export default function PDFConcatenator() {
+  const [fileName, setFileName] = useState<string>("");
   const [fileSelections, setFileSelections] = useState<FileSelection[]>([]);
 
   const onConcatenate = async () => {
     if (fileSelections.length > 0) {
-      concatPdfs(fileSelectionsToFiles(fileSelections));
+      concatPdfs(fileName, fileSelectionsToFiles(fileSelections));
     }
   };
 
@@ -41,6 +55,19 @@ export default function PDFConcatenator() {
   ) => {
     console.log("Accepted:", acceptedFiles);
     console.log("Rejected:", fileRejections);
+
+    if (acceptedFiles.length == 0) {
+      return;
+    }
+
+    if (fileName === "") {
+      const firstFile = acceptedFiles[0];
+      console.log(firstFile)
+      const name = firstFile.name.substring(0, firstFile.name.lastIndexOf('.'));
+      const separator = determineFileNameSeparator(firstFile.name);
+
+      setFileName(`${name}${separator}with${separator}attachments`)
+    }
 
     const newFileSelections: FileSelection[] = [];
 
@@ -145,6 +172,15 @@ export default function PDFConcatenator() {
             </header>
           )}
         </Dropzone>
+
+        <div className="flex w-full max-w-sm items-center space-x-2">
+          <Input
+            value={fileName}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+            type="text"
+            placeholder="Name of the new PDF file" />
+          <span>.pdf</span>
+        </div>
         <FileListing />
         <Button
           disabled={fileSelections.length === 0}

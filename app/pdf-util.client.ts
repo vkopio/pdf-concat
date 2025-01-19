@@ -17,13 +17,13 @@ export async function getPageCount(blob: Blob): Promise<number> {
   return await get_page_count(blob);
 }
 
-export async function concatPdfs(blobs: Blob[]) {
+export async function concatPdfs(fileName: string, blobs: Blob[]) {
   await initPdfium;
   const result = await concat(blobs);
 
   console.log(result);
 
-  const file = new File([result], 'concatenated.pdf', { type: 'application/pdf' });
+  const file = new File([result], `${fileName}.pdf`, { type: 'application/pdf' });
   const tempLink = document.createElement("a");
 
   tempLink.setAttribute('href', URL.createObjectURL(file));
