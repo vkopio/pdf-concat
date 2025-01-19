@@ -149,7 +149,7 @@ export default function PDFConcatenator() {
           }}
           multiple>
           {({ getRootProps, getInputProps }) => (
-            <header {...getRootProps()} className="flex flex-col items-center gap-9 cursor-pointer p-10 border-2 border-dashed border-primary">
+            <header {...getRootProps()} className="w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary">
               <input {...getInputProps()} />
               <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
                 Drop PDF files here, or click to select.
@@ -159,13 +159,17 @@ export default function PDFConcatenator() {
         </Dropzone>
 
         {fileSelections.length != 0 && <>
-          <div className="flex w-full max-w-sm items-center space-x-2">
-            <Input
-              value={fileName}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
-              type="text"
-              placeholder="New file name" />
-            <span>.pdf</span>
+          <div className="w-full">
+            <div className="py-1">Name of the new file:</div>
+            <div className="flex w-full items-center space-x-1">
+              <Input
+                className="flex-1"
+                value={fileName}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+                type="text"
+                placeholder="New file name" />
+              <span className="flex-none">.pdf</span>
+            </div>
           </div>
           <FileListing />
           <Button
