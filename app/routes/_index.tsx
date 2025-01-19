@@ -3,8 +3,11 @@ import PDFConcatenator from "../components/pdf-concatenator.client"
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "PDF Concatenator" },
+    {
+      name: "PDF Concatenator - Merge PDF files securely on your own computer.",
+      content: "This tool allows you to merge your PDF files without needing to send them to some shady server where they are totally not used to tran an AI model.",
+    },
   ];
 };
 
