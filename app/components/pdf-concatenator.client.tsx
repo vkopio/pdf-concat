@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
-import { TrashIcon } from "@radix-ui/react-icons"
+import { Trash2 } from 'lucide-react';
 
 import { getPageCount, concatPdfs } from "../pdf-util.client";
 import { Button } from "~/components/ui/button";
@@ -83,7 +83,7 @@ export default function PDFConcatenator() {
               <TableCell>{fileSelection.file.name}</TableCell>
               <TableCell>{fileSelection.pageCount}</TableCell>
               <TableCell>{fileSelection.pageSelection ?? "All"}</TableCell>
-              <TableCell className="text-right"><button onClick={() => onFileSelectionRemoved(index)}><TrashIcon /></button></TableCell>
+              <TableCell className="text-right"><button onClick={() => onFileSelectionRemoved(index)}><Trash2 /></button></TableCell>
             </TableRow>
           ))}
         </TableBody>
