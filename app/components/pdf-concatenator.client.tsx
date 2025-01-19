@@ -1,13 +1,24 @@
-import type { MetaFunction } from "@remix-run/node";
 import React, { useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
+import { TrashIcon } from "@radix-ui/react-icons"
 
-import { logPageMetrics, concatPdfs } from "../pdf-util.client";
+import { getPageCount, concatPdfs } from "../pdf-util.client";
+import { Button } from "~/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table"
 
 interface FileSelection {
   file: File;
   id: string,
+  pageCount: number,
   pageSelection?: string;
 }
 
@@ -32,17 +43,17 @@ export default function PDFConcatenator() {
     console.log("Accepted:", acceptedFiles);
     console.log("Rejected:", fileRejections);
 
-    const newSelections = acceptedFiles.map((file) => {
-      return {
-        file, id: uuid(),
-      };
-    })
-
-    setFileSelections([...fileSelections, ...newSelections]);
+    const newFileSelections: FileSelection[] = [];
 
     for (const file of acceptedFiles) {
-      await logPageMetrics(file);
+      const pageCount = await getPageCount(file);
+
+      newFileSelections.push({
+        file, pageCount, id: uuid(),
+      })
     }
+
+    setFileSelections([...fileSelections, ...newFileSelections]);
   };
 
   const onFileSelectionRemoved = (index: number) => {
@@ -56,26 +67,27 @@ export default function PDFConcatenator() {
     }
 
     return (
-      <table className="w-full table-auto">
-        <thead>
-          <tr>
-            <th className="text-left">Name</th>
-            <th className="text-left">Page Selection</th>
-            <th className="text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>File Order</TableHead>
+            <TableHead>Page Count</TableHead>
+            <TableHead>Page Selection</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {fileSelections.map((fileSelection, index) => (
-            <tr key={fileSelection.id}>
-              <td>
-                {fileSelection.file.name}
-              </td>
-              <td>{fileSelection.pageSelection ?? "All"}</td>
-              <td className="text-right"><button onClick={() => onFileSelectionRemoved(index)}>X</button></td>
-            </tr>
+            <TableRow key={fileSelection.id}>
+              <TableCell>{fileSelection.file.name}</TableCell>
+              <TableCell>{fileSelection.pageCount}</TableCell>
+              <TableCell>{fileSelection.pageSelection ?? "All"}</TableCell>
+              <TableCell className="text-right"><button onClick={() => onFileSelectionRemoved(index)}><TrashIcon /></button></TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     );
   };
 
@@ -98,11 +110,11 @@ export default function PDFConcatenator() {
           )}
         </Dropzone>
         <FileListing />
-        <button
+        <Button
           disabled={fileSelections.length === 0}
           onClick={onConcatenate}>
           CONCATENATE
-        </button>
+        </Button>
       </div>
     </div>
   );

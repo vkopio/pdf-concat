@@ -1,6 +1,6 @@
 import bindModuleInit, {
   initialize_pdfium_render,
-  log_page_metrics_to_console,
+  get_page_count,
   concat,
 } from "@pdfium-bindings/pdf_concat";
 
@@ -12,9 +12,9 @@ const initPdfium = window.PDFiumModule().then(async (pdfiumModule) => {
   initialize_pdfium_render(pdfiumModule, bindModule, false);
 });
 
-export async function logPageMetrics(blob: Blob) {
+export async function getPageCount(blob: Blob): Promise<number> {
   await initPdfium;
-  await log_page_metrics_to_console(blob);
+  return await get_page_count(blob);
 }
 
 export async function concatPdfs(blobs: Blob[]) {
