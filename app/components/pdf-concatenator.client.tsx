@@ -43,6 +43,7 @@ export default function PDFConcatenator() {
     fileRejections: FileRejection[],
     _event: DropEvent,
   ) => {
+    setIsDragging(false)
     console.log("Accepted:", acceptedFiles);
     console.log("Rejected:", fileRejections);
 
@@ -148,8 +149,6 @@ export default function PDFConcatenator() {
       onDrop={onFilesSelected}
       onDragEnter={() => setIsDragging(true)}
       onDragLeave={() => setIsDragging(false)}
-      onDropAccepted={() => setIsDragging(false)}
-      onDropRejected={() => setIsDragging(false)}
       accept={{
         'application/pdf': []
       }}
