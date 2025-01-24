@@ -122,14 +122,14 @@ export default function PDFConcatenator() {
               <TableCell className="text-right">
                 <Button
                   variant="ghost"
-                  className="disabled:opacity-0"
+                  className="disabled:opacity-20"
                   onClick={() => moveUp(index)}
                   disabled={index === 0}>
                   <ArrowUp />
                 </Button>
                 <Button
                   variant="ghost"
-                  className="disabled:opacity-0"
+                  className="disabled:opacity-20"
                   onClick={() => moveDown(index)}
                   disabled={index === fileSelections.length - 1}>
                   <ArrowDown />
