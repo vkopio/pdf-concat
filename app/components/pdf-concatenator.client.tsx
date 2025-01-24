@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
-import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, ShieldCheck, Trash2 } from 'lucide-react';
 
 import { getPageCount, concatPdfs } from "~/lib/pdf.client";
 import { generateNewFileName } from "~/lib/utils";
@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 interface FileSelection {
   file: File;
@@ -169,12 +170,22 @@ export default function PDFConcatenator() {
     );
   };
 
-  const dropzoneBaseClasses = "w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary rounded-md hover:bg-gray-200";
+  const Info = () => {
+    return <Alert>
+      <ShieldCheck className="h-8 w-8" />
+      <AlertTitle className="text-lg font-bold">Concatenate PDF files securely</AlertTitle>
+      <AlertDescription className="text-md">
+        This tool runs completely on your own device, so your documents are kept safe! If you are paranoid, feel free to disconnect from the Internet while using this tool.
+      </AlertDescription>
+    </Alert>;
+  }
+
+  const dropzoneBaseClasses = "w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary rounded-lg hover:bg-gray-200";
   const dropzoneDragClass = " bg-gray-200";
   const hasFilesSelected = fileSelections.length != 0;
 
   return (<>
-
+    {!hasFilesSelected && <Info />}
     {
       hasFilesSelected && <>
         <div className="w-full">
