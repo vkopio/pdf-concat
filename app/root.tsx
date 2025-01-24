@@ -34,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="flex flex-col flex-grow">
         <header className="flex flex-row w-full p-6">
           <Link to="/" className="flex-1 font-bold text-lg hover:underline">
-            <img src="/logo.svg" className="w-6 inline-block mr-1" />PDF Concatenator</Link>
+            <img alt="logo" src="/logo.svg" className="w-12 inline-block mr-4" />PDF Concatenator</Link>
           <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
         </header>
         <div className="flex flex-1 justify-center px-6">
