@@ -30,6 +30,7 @@ function fileSelectionsToFiles(fileSelections: FileSelection[]) {
 export default function PDFConcatenator() {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
+  const [isDefaultName, setIsDefaultName] = useState<boolean>(true);
   const [fileSelections, setFileSelections] = useState<FileSelection[]>([]);
 
   const onConcatenate = async () => {
@@ -37,6 +38,24 @@ export default function PDFConcatenator() {
       concatPdfs(fileName, fileSelectionsToFiles(fileSelections));
     }
   };
+
+  const onNameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFileName(event.target.value);
+    setIsDefaultName(false);
+  };
+
+  const resolveFileName = (oldSelections: FileSelection[], newSelections: FileSelection[]) => {
+    if (oldSelections.length === 0 || newSelections.length === 0) {
+      return;
+    }
+
+    const oldFirstName = oldSelections[0].file.name;
+    const newFirstName = newSelections[0].file.name;
+
+    if (isDefaultName && oldFirstName !== newFirstName) {
+      setFileName(generateNewFileName(newFirstName));
+    }
+  }
 
   const onFilesSelected = async (
     acceptedFiles: File[],
@@ -73,6 +92,7 @@ export default function PDFConcatenator() {
   const onFileSelectionRemoved = (index: number) => {
     const newFileSelections = [...fileSelections.slice(0, index), ...fileSelections.slice(index + 1)];
 
+    resolveFileName(fileSelections, newFileSelections);
     setFileSelections(newFileSelections);
 
     if (newFileSelections.length == 0) {
@@ -86,6 +106,7 @@ export default function PDFConcatenator() {
     const newList = [...fileSelections];
     [newList[index], newList[index - 1]] = [newList[index - 1], newList[index]];
 
+    resolveFileName(fileSelections, newList);
     setFileSelections(newList);
   };
 
@@ -95,6 +116,7 @@ export default function PDFConcatenator() {
     const newList = [...fileSelections];
     [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
 
+    resolveFileName(fileSelections, newList);
     setFileSelections(newList);
   };
 
@@ -161,7 +183,7 @@ export default function PDFConcatenator() {
             <Input
               className="flex-1"
               value={fileName}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+              onChange={onNameChanged}
               type="text"
               placeholder="New file name" />
             <span className="flex-none">.pdf</span>
