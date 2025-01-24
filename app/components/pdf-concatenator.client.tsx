@@ -149,8 +149,27 @@ export default function PDFConcatenator() {
 
   const dropzoneBaseClasses = "w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary rounded-md hover:bg-gray-200";
   const dropzoneDragClass = " bg-gray-200";
+  const hasFilesSelected = fileSelections.length != 0;
 
   return (<>
+
+    {
+      hasFilesSelected && <>
+        <div className="w-full">
+          <div className="py-1">Name of the new file:</div>
+          <div className="flex w-full items-center space-x-1">
+            <Input
+              className="flex-1"
+              value={fileName}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
+              type="text"
+              placeholder="New file name" />
+            <span className="flex-none">.pdf</span>
+          </div>
+        </div>
+        <FileListing />
+      </>
+    }
     <Dropzone
       onDrop={onFilesSelected}
       onDragEnter={() => setIsDragging(true)}
@@ -169,26 +188,12 @@ export default function PDFConcatenator() {
       )}
     </Dropzone>
     {
-      fileSelections.length != 0 && <>
-        <div className="w-full">
-          <div className="py-1">Name of the new file:</div>
-          <div className="flex w-full items-center space-x-1">
-            <Input
-              className="flex-1"
-              value={fileName}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFileName(event.target.value)}
-              type="text"
-              placeholder="New file name" />
-            <span className="flex-none">.pdf</span>
-          </div>
-        </div>
-        <FileListing />
-        <Button
-          disabled={fileSelections.length === 0}
-          onClick={onConcatenate}>
-          CONCATENATE
-        </Button>
-      </>
+      hasFilesSelected &&
+      <Button
+        disabled={fileSelections.length === 0}
+        onClick={onConcatenate}>
+        CONCATENATE
+      </Button>
     }
   </>);
 }
