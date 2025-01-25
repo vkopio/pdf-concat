@@ -51,7 +51,7 @@ export default function PDFConcatenator() {
 
         toast({
           variant: "destructive",
-          title: "Failed to concatenate files",
+          title: "Failed to concatenate files!",
           description: message,
         })
       }

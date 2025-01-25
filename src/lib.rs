@@ -50,7 +50,7 @@ pub async fn concat(
                 )
                 .map_err(|_e| {
                     JsError::new(&format!(
-                        "Cannot concatenate file: {}! Is the page selection '{}' correct?",
+                        "Cannot concatenate the file: {}. Is the page selection '{}' correct?",
                         name, page_selection
                     ))
                 })?;
