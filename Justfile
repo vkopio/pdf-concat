@@ -25,4 +25,5 @@ install:
     npm install
 
 copy-pdfium:
+    mkdir -p ./target/pdfium
     cp -r $PDFIUM_PATH/node ./target/pdfium
