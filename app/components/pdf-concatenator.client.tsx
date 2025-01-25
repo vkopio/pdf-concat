@@ -73,7 +73,6 @@ export default function PDFConcatenator() {
     fileRejections: FileRejection[],
     _event: DropEvent,
   ) => {
-    setState({ ...state, isDragging: false })
     console.log("Accepted:", acceptedFiles);
     console.log("Rejected:", fileRejections);
 
@@ -86,14 +85,13 @@ export default function PDFConcatenator() {
     }
 
     if (acceptedFiles.length == 0) {
+      setState({ ...state, isDragging: false });
       return;
     }
 
-    if (state.fileName === "") {
-      const firstFile = acceptedFiles[0];
-
-      setState({ ...state, fileName: generateNewFileName(firstFile.name) });
-    }
+    const newFileName = state.fileName === ""
+      ? generateNewFileName(acceptedFiles[0].name)
+      : state.fileName;
 
     const newFileSelections: FileSelection[] = [];
 
@@ -105,7 +103,12 @@ export default function PDFConcatenator() {
       })
     }
 
-    setState({ ...state, fileSelections: [...state.fileSelections, ...newFileSelections] });
+    setState({
+      ...state,
+      fileSelections: [...state.fileSelections, ...newFileSelections],
+      fileName: newFileName,
+      isDragging: false,
+    });
   };
 
   const dropzoneBaseClasses = "w-full flex flex-col items-center cursor-pointer p-10 border-2 border-dashed border-primary rounded-lg hover:bg-gray-200";
