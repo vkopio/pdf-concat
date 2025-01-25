@@ -38,12 +38,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <img alt="logo" src="/logo.svg" className="w-12 inline-block mr-4" />PDF Concatenator
           </Link>
         </header>
-        <div className="flex flex-1 justify-center px-6">
-          <div className="flex flex-col items-center gap-10 max-w-screen-lg w-full pt-10">
+        <div className="flex flex-1 justify-center p-6">
+          <div className="flex flex-col items-center gap-10 max-w-screen-lg w-full">
             {children}
           </div >
         </div >
-        <footer className="flex flex-row bg-black bg-opacity-5 p-4">
+        <footer className="flex flex-row bg-black bg-opacity-5 p-6">
           <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
           <div className="flex-1"></div>
           <div>
