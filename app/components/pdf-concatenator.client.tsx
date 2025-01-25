@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { useToast } from '~/hooks/use-toast.client';
+import { useToast } from '~/hooks/use-toast';
 
 interface FileSelection {
   file: File;
