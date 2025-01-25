@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
-import { ArrowDown, ArrowUp, ShieldCheck, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, CircleHelp, ShieldCheck, Trash2 } from 'lucide-react';
 
 import { getPageCount, concatPdfs } from "~/lib/pdf.client";
 import { generateNewFileName } from "~/lib/utils";
@@ -15,8 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { useToast } from '~/hooks/use-toast';
+import { Tooltip, TooltipContent, TapableTooltip, TooltipTrigger } from '~/components/ui/tooltip';
 
 interface FileSelection {
   file: File;
@@ -214,7 +215,16 @@ export default function PDFConcatenator() {
           <TableRow>
             <TableHead>File Order</TableHead>
             <TableHead>Page Count</TableHead>
-            <TableHead>Page Selection</TableHead>
+            <TableHead className="align-bottom">Page Selection
+              <TapableTooltip content={
+                <TooltipContent>
+                  <p>A comma-separated list of pages or page ranges.</p>
+                  <p>Example: 1, 3-4, 6</p>
+                </TooltipContent>
+              }>
+                <CircleHelp className="ml-1 w-4 inline-block" />
+              </TapableTooltip>
+            </TableHead>
             <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
