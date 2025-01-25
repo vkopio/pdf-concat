@@ -24,23 +24,36 @@ pub async fn get_page_count(blob: Blob) -> Result<u16, JsError> {
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub async fn concat(files: Vec<Blob>, pages: Vec<String>) -> Result<Blob, JsError> {
+pub async fn concat(
+    files: Vec<Blob>,
+    names: Vec<String>,
+    pages: Vec<String>,
+) -> Result<Blob, JsError> {
     let pdfium = Pdfium::default();
     let mut document = pdfium.create_new_pdf()?;
 
-    for (file, pages) in files.into_iter().zip(pages) {
-        if pages.is_empty() {
+    for (file, (name, page_selection)) in files.into_iter().zip(names.into_iter().zip(pages)) {
+        if page_selection.is_empty() {
             document
                 .pages_mut()
                 .append(&pdfium.load_pdf_from_blob(file, None).await?)?;
         } else {
             let destination_page_index = document.pages().len();
+            let file_to_concatenate = &pdfium.load_pdf_from_blob(file, None).await?;
 
-            document.pages_mut().copy_pages_from_document(
-                &pdfium.load_pdf_from_blob(file, None).await?,
-                &pages,
-                destination_page_index,
-            )?;
+            document
+                .pages_mut()
+                .copy_pages_from_document(
+                    file_to_concatenate,
+                    &page_selection,
+                    destination_page_index,
+                )
+                .map_err(|_e| {
+                    JsError::new(&format!(
+                        "Cannot concatenate file: {}! Is the page selection '{}' correct?",
+                        name, page_selection
+                    ))
+                })?;
         }
     }
 

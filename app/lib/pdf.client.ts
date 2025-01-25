@@ -27,9 +27,10 @@ export async function concatPdfs(requestedFileName: string, fileEntries: FileEnt
   await initPdfium;
 
   const files = fileEntries.map(entry => entry.file);
+  const names = fileEntries.map(entry => entry.file.name);
   const pages = fileEntries.map(entry => entry.pages);
 
-  const result = await concat(files, pages);
+  const result = await concat(files, names, pages);
 
   const fileName = requestedFileName !== ""
     ? requestedFileName

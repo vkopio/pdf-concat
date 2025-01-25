@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { useToast } from '~/hooks/use-toast.client';
 
 interface FileSelection {
   file: File;
@@ -84,6 +85,7 @@ const FileListingRow = memo(
 );
 
 export default function PDFConcatenator() {
+  const { toast } = useToast()
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
   const [isDefaultName, setIsDefaultName] = useState<boolean>(true);
@@ -91,7 +93,17 @@ export default function PDFConcatenator() {
 
   const onConcatenate = async () => {
     if (fileSelections.length > 1) {
-      concatPdfs(fileName, fileSelectionsToWasmCompatible(fileSelections));
+      try {
+        await concatPdfs(fileName, fileSelectionsToWasmCompatible(fileSelections));
+      } catch (e) {
+        const message = (e instanceof Error) ? e.message : "Unknown error";
+
+        toast({
+          variant: "destructive",
+          title: "Failed to concatenate files",
+          description: message,
+        })
+      }
     }
   };
 
