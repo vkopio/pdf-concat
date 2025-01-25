@@ -134,6 +134,14 @@ export default function PDFConcatenator() {
     console.log("Accepted:", acceptedFiles);
     console.log("Rejected:", fileRejections);
 
+    for (const rejection of fileRejections) {
+      toast({
+        variant: "destructive",
+        title: "File rejected",
+        description: `The file '${rejection.file.name}' is not a PDF!`,
+      });
+    }
+
     if (acceptedFiles.length == 0) {
       return;
     }
