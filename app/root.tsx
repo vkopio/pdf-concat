@@ -34,15 +34,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex flex-col flex-grow">
         <header className="flex flex-row w-full p-6">
-          <Link to="/" className="flex-1 font-bold text-lg hover:underline">
-            <img alt="logo" src="/logo.svg" className="w-12 inline-block mr-4" />PDF Concatenator</Link>
-          <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+          <Link to="/" className="font-bold text-lg hover:underline">
+            <img alt="logo" src="/logo.svg" className="w-12 inline-block mr-4" />PDF Concatenator
+          </Link>
         </header>
         <div className="flex flex-1 justify-center px-6">
           <div className="flex flex-col items-center gap-10 max-w-screen-lg w-full pt-10">
             {children}
           </div >
         </div >
+        <footer className="flex flex-row bg-black bg-opacity-5 p-4">
+          <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+          <div className="flex-1"></div>
+          <div>
+            <a href="https://github.com/vkopio/pdf-concatenator">
+              <img alt="Github" title="View source code" src="/github.svg" className="w-6 h-6" />
+            </a>
+          </div>
+        </footer>
         <Toaster />
         <ScrollRestoration />
         <Scripts />
