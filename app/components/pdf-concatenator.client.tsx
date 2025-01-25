@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 import { ArrowDown, ArrowUp, ShieldCheck, Trash2 } from 'lucide-react';
@@ -21,12 +21,67 @@ interface FileSelection {
   file: File;
   id: string,
   pageCount: number,
-  pageSelection?: string;
+  pageSelection: string;
 }
 
-function fileSelectionsToFiles(fileSelections: FileSelection[]) {
-  return fileSelections.map((selection) => selection.file);
+function fileSelectionsToWasmCompatible(fileSelections: FileSelection[]) {
+  return fileSelections.map((selection) => { return { file: selection.file, pages: selection.pageSelection }; });
 }
+
+const FileListingRow = memo(
+  function FileListingRow({
+    index,
+    fileSelection,
+    fileSelectionCount,
+    handleInputChange,
+    onFileSelectionRemoved,
+    moveUp,
+    moveDown,
+  }: {
+    index: number,
+    fileSelection: FileSelection,
+    fileSelectionCount: number,
+    handleInputChange: (_id: string, _value: string) => void,
+    onFileSelectionRemoved: (_index: number) => void,
+    moveUp: (_index: number) => void,
+    moveDown: (_index: number) => void,
+  }) {
+    return (
+      <TableRow key={fileSelection.id}>
+        <TableCell>{fileSelection.file.name}</TableCell>
+        <TableCell>{fileSelection.pageCount}</TableCell>
+        <TableCell>
+          <Input
+            value={fileSelection.pageSelection}
+            onChange={(event) => handleInputChange(fileSelection.id, event.target.value)}
+            type="text"
+            placeholder="All" />
+        </TableCell>
+        <TableCell className="text-right">
+          <Button
+            variant="ghost"
+            className="disabled:opacity-20"
+            onClick={() => moveUp(index)}
+            disabled={index === 0}>
+            <ArrowUp />
+          </Button>
+          <Button
+            variant="ghost"
+            className="disabled:opacity-20"
+            onClick={() => moveDown(index)}
+            disabled={index === fileSelectionCount - 1}>
+            <ArrowDown />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => onFileSelectionRemoved(index)}>
+            <Trash2 />
+          </Button>
+        </TableCell>
+      </TableRow>
+    );
+  }
+);
 
 export default function PDFConcatenator() {
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -35,8 +90,8 @@ export default function PDFConcatenator() {
   const [fileSelections, setFileSelections] = useState<FileSelection[]>([]);
 
   const onConcatenate = async () => {
-    if (fileSelections.length > 0) {
-      concatPdfs(fileName, fileSelectionsToFiles(fileSelections));
+    if (fileSelections.length > 1) {
+      concatPdfs(fileName, fileSelectionsToWasmCompatible(fileSelections));
     }
   };
 
@@ -83,7 +138,7 @@ export default function PDFConcatenator() {
       const pageCount = await getPageCount(file);
 
       newFileSelections.push({
-        file, pageCount, id: uuid(),
+        file, pageCount, pageSelection: "", id: uuid(),
       })
     }
 
@@ -126,6 +181,13 @@ export default function PDFConcatenator() {
       return <></>;
     }
 
+    const onPageSelectionChanged = (id: string, newValue: string) => {
+      setFileSelections((oldData) =>
+        oldData.map((selection) =>
+          selection.id === id ? { ...selection, pageSelection: newValue } : selection
+        ));
+    };
+
     return (
       <Table>
         <TableHeader>
@@ -138,32 +200,15 @@ export default function PDFConcatenator() {
         </TableHeader>
         <TableBody>
           {fileSelections.map((fileSelection, index) => (
-            <TableRow key={fileSelection.id}>
-              <TableCell>{fileSelection.file.name}</TableCell>
-              <TableCell>{fileSelection.pageCount}</TableCell>
-              <TableCell>{fileSelection.pageSelection ?? "All"}</TableCell>
-              <TableCell className="text-right">
-                <Button
-                  variant="ghost"
-                  className="disabled:opacity-20"
-                  onClick={() => moveUp(index)}
-                  disabled={index === 0}>
-                  <ArrowUp />
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="disabled:opacity-20"
-                  onClick={() => moveDown(index)}
-                  disabled={index === fileSelections.length - 1}>
-                  <ArrowDown />
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => onFileSelectionRemoved(index)}>
-                  <Trash2 />
-                </Button>
-              </TableCell>
-            </TableRow>
+            <FileListingRow
+              key={fileSelection.id}
+              index={index}
+              fileSelection={fileSelection}
+              fileSelectionCount={fileSelections.length}
+              onFileSelectionRemoved={onFileSelectionRemoved}
+              handleInputChange={onPageSelectionChanged}
+              moveUp={moveUp}
+              moveDown={moveDown} />
           ))}
         </TableBody>
       </Table>
@@ -223,7 +268,7 @@ export default function PDFConcatenator() {
     {
       hasFilesSelected &&
       <Button
-        disabled={fileSelections.length === 0}
+        disabled={fileSelections.length < 2}
         onClick={onConcatenate}>
         CONCATENATE
       </Button>

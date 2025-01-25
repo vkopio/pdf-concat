@@ -11,8 +11,6 @@ use web_sys::Blob;
 // on how to build and package this example alongside a WASM build of Pdfium, suitable
 // for running in a browser.
 
-/// Downloads the given URL, opens it as a PDF document, then logs the width and height of
-/// each page in the document, along with other document metrics, to the Javascript console.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub async fn get_page_count(blob: Blob) -> Result<u16, JsError> {
@@ -26,27 +24,25 @@ pub async fn get_page_count(blob: Blob) -> Result<u16, JsError> {
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub async fn concat(blobs: Vec<Blob>) -> Result<Blob, JsError> {
+pub async fn concat(files: Vec<Blob>, pages: Vec<String>) -> Result<Blob, JsError> {
     let pdfium = Pdfium::default();
-
     let mut document = pdfium.create_new_pdf()?;
 
-    for blob in blobs {
-        document
-            .pages_mut()
-            .append(&pdfium.load_pdf_from_blob(blob, None).await?)?;
+    for (file, pages) in files.into_iter().zip(pages) {
+        if pages.is_empty() {
+            document
+                .pages_mut()
+                .append(&pdfium.load_pdf_from_blob(file, None).await?)?;
+        } else {
+            let destination_page_index = document.pages().len();
+
+            document.pages_mut().copy_pages_from_document(
+                &pdfium.load_pdf_from_blob(file, None).await?,
+                &pages,
+                destination_page_index,
+            )?;
+        }
     }
-
-    // ... import some more pages from another test file, this time
-    // using PdfPages::import_pages_from_document() ...
-
-    // let destination_page_index = document.pages().len();
-
-    // document.pages_mut().copy_pages_from_document(
-    //     &pdfium.load_pdf_from_blob(blob, None).await?,
-    //     "3-6", // Note: 1-indexed, not 0-indexed
-    //     destination_page_index,
-    // )?;
 
     Ok(document.save_to_blob()?)
 }
