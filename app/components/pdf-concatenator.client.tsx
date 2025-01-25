@@ -219,6 +219,7 @@ export default function PDFConcatenator() {
               <TapableTooltip content={
                 <TooltipContent>
                   <p>A comma-separated list of pages or page ranges.</p>
+                  <p>Leave empty to select all pages.</p>
                   <p>Example: 1, 3-4, 6</p>
                 </TooltipContent>
               }>
