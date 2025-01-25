@@ -59,33 +59,6 @@
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath nativeBuildInputs;
           PDFIUM_PATH = pdfium;
         };
-
-        packages.default = stdenv.mkDerivation {
-          inherit
-            pname
-            version
-            buildInputs
-            nativeBuildInputs
-            pdfium
-            ;
-
-          src = ./.;
-
-          configurePhase = ''
-            export HOME=$PWD
-          '';
-
-          buildPhase = ''
-            just build-wasm
-          '';
-
-          installPhase = ''
-            mkdir $out
-            ls -la $src
-            cp $pdfium/node/pdfium.js $pdfium/node/pdfium.wasm $out
-          '';
-          #cp $src/target/pkg-web/pdf_concat_bg.wasm $src/target/pkg-web/pdf_concat.js $out
-        };
       }
     );
 }
