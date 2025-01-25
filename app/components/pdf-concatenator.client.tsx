@@ -215,7 +215,7 @@ export default function PDFConcatenator() {
           <TableRow>
             <TableHead>File Order</TableHead>
             <TableHead>Page Count</TableHead>
-            <TableHead className="align-bottom">Page Selection
+            <TableHead>Page Selection
               <TapableTooltip content={
                 <TooltipContent>
                   <p>A comma-separated list of pages or page ranges.</p>
