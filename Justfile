@@ -6,17 +6,23 @@ run:
     cargo watch -w src -w "Cargo.toml" -w "Cargo.lock" -s "wasm-pack build --out-dir target/pkg --target web"
     npm run dev
 
-watch-wasm:
-    cargo watch -w src -w "Cargo.toml" -w "Cargo.lock" -s "wasm-pack build --out-dir target/pkg --target web"
+test-ci: copy-pdfium install
+    cargo clippy -- -Dwarnings
+    npm run typecheck
+    npm run lint
 
-build: build-wasm build-frontend
+build-ci: copy-pdfium install build-wasm build-frontend
+
+build: install build-wasm build-frontend
 
 build-frontend:
-    npm install
     npm run build
 
 build-wasm:
     wasm-pack build --out-dir target/pkg --target web
+
+install:
+    npm install
 
 copy-pdfium:
     cp -r $PDFIUM_PATH/node ./target/pdfium
