@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url'
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 declare module "@remix-run/node" {
   interface Future {
@@ -23,22 +22,6 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'target/pkg/pdf_concat_bg.wasm',
-          dest: 'assets'
-        },
-        {
-          src: `target/pdfium/pdfium.wasm`,
-          dest: 'assets'
-        },
-        {
-          src: `target/pdfium/pdfium.js`,
-          dest: 'assets'
-        },
-      ]
-    })
   ],
   resolve: {
     alias: {

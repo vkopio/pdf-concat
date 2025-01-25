@@ -18,6 +18,7 @@ build: install build-wasm build-frontend
 build-frontend:
     mkdir -p ./build/server/assets
     npm run build
+    ls -la ./build/server
     rm -rf ./build/server
 
 build-wasm:

@@ -55,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster />
         <ScrollRestoration />
         <Scripts />
-        <script src="assets/pdfium.js"></script>
+        <script src="pdfium.js"></script>
       </body>
     </html>
   );

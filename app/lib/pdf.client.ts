@@ -14,7 +14,7 @@ interface FileEntry {
 const initPdfium = window.PDFiumModule().then(async (pdfiumModule) => {
   console.log(pdfiumModule);
 
-  const bindModule = await bindModuleInit(`${window.location.origin}/assets/pdf_concat_bg.wasm`);
+  const bindModule = await bindModuleInit(`${window.location.origin}/pdf_concat_bg.wasm`);
   initialize_pdfium_render(pdfiumModule, bindModule, false);
 });
 
