@@ -30,11 +30,11 @@ export default defineConfig({
           dest: 'assets'
         },
         {
-          src: `${process.env.PDFIUM_PATH}/node/pdfium.wasm`,
+          src: `target/pdfium/pdfium.wasm`,
           dest: 'assets'
         },
         {
-          src: `${process.env.PDFIUM_PATH}/node/pdfium.js`,
+          src: `target/pdfium/pdfium.js`,
           dest: 'assets'
         },
       ]
