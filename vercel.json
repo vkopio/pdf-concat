@@ -7,8 +7,8 @@
   "builds": [
     {
       "src": "build/client/**",
-      "dest": "/",
       "use": "@vercel/static"
     }
-  ]
+  ],
+  "outputDirectory": "build/client"
 }
