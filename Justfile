@@ -29,3 +29,6 @@ install:
 copy-pdfium:
     mkdir -p ./target/pdfium
     cp -r $PDFIUM_PATH/node ./target/pdfium
+    ls -la .
+    pwd
+    ls -la ./target/pdfium
