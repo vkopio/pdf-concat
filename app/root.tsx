@@ -39,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
         </header>
         <div className="flex flex-1 justify-center px-6">
-          <div className="flex flex-col items-center gap-10 max-w-screen-md w-full pt-10">
+          <div className="flex flex-col items-center gap-10 max-w-screen-lg w-full pt-10">
             {children}
           </div >
         </div >
