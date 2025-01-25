@@ -16,7 +16,9 @@ build-ci: copy-pdfium install build-wasm build-frontend
 build: install build-wasm build-frontend
 
 build-frontend:
+    mkdir -p ./build/server/assets
     npm run build
+    rm -rf ./build/server
 
 build-wasm:
     wasm-pack build --out-dir target/pkg --target web
