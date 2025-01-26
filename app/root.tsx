@@ -8,6 +8,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
+import { Analytics } from '@vercel/analytics/remix';
 import { Toaster } from "~/components/ui/toaster";
 
 export const links: LinksFunction = () => [
@@ -52,6 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </a>
           </div>
         </footer>
+        <Analytics />
         <Toaster />
         <ScrollRestoration />
         <Scripts />
