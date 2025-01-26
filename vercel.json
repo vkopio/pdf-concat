@@ -13,7 +13,17 @@
   "rewrites": [
     {
       "source": "/privacy-policy",
-      "destination": "/index.html"
+      "destination": "/"
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/index.html"
     }
   ]
 }
