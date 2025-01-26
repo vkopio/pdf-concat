@@ -12,6 +12,10 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "This tool allows you to combine your PDF files securely without the need to upload them anywhere. All free of charge.",
     },
+    {
+      name: "google-site-verification",
+      content: "BaKNMKnxYL-IEGnryfTkPKeDsfB1Sy8ayWbKtG1wrss",
+    },
   ];
 };
 
