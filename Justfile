@@ -12,6 +12,7 @@ test-ci: copy-pdfium install build-wasm
     npm run lint
 
 build-ci: copy-pdfium install build-wasm build-frontend
+    cp vercel.json build/client
 
 build: install build-wasm build-frontend
 
