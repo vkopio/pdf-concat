@@ -197,7 +197,7 @@ function Info() {
     <ShieldCheck className="h-8 w-8" />
     <AlertTitle className="text-lg font-bold">Concatenate PDF files securely</AlertTitle>
     <AlertDescription className="text-md">
-      This tool runs completely on your own device, so your documents are kept safe! If you are paranoid, feel free to disconnect from the Internet while using this tool.
+      This tool runs completely on your own device, so your documents are kept safe! However, you should never trust any website at face value, so feel free to disconnect from the Internet while using this tool.
     </AlertDescription>
   </Alert>;
 }
