@@ -12,7 +12,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/privacy-policy",
       "destination": "/index.html"
     }
   ]
