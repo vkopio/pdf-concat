@@ -3,10 +3,14 @@ import PDFConcatenator from "../components/pdf-concatenator.client"
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "PDF Concatenator" },
+    { title: "PDF Concatenator | Merge PDF files privately" },
     {
-      name: "PDF Concatenator - Merge PDF files securely on your own computer.",
-      content: "This tool allows you to merge your PDF files without needing to send them to some shady server where they are totally not used to tran an AI model.",
+      property: "og:title",
+      content: "PDF Concatenator",
+    },
+    {
+      name: "description",
+      content: "This tool allows you to combine your PDF files securely without the need to upload them anywhere. All free of charge.",
     },
   ];
 };

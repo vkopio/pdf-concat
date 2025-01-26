@@ -3,7 +3,14 @@ import type { MetaFunction } from "@remix-run/node";
 export const meta: MetaFunction = () => {
   return [
     { title: "PDF Concatenator | Privacy Policy" },
-    { name: "Privacy Policy", content: "A description on how your data is being processed." },
+    {
+      property: "og:title",
+      content: "PDF Concatenator",
+    },
+    {
+      name: "description",
+      content: "A privacy policy for PDF Concatenator that describes how your data is being processed.",
+    },
   ];
 };
 
