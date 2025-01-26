@@ -43,7 +43,7 @@ export default function PDFConcatenator() {
   })
 
   const onConcatenate = async () => {
-    if (state.fileSelections.length > 1) {
+    if (state.fileSelections.length > 0) {
       try {
         await concatPdfs(state.fileName, fileSelectionsToWasmCompatible(state.fileSelections));
       } catch (e) {
@@ -184,7 +184,7 @@ export default function PDFConcatenator() {
     {
       hasFilesSelected &&
       <Button
-        disabled={state.fileSelections.length < 2}
+        disabled={state.fileSelections.length < 1}
         onClick={onConcatenate}>
         CONCATENATE
       </Button>
