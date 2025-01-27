@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 import { ArrowDown, ArrowUp, CircleHelp, ShieldCheck, Trash2 } from 'lucide-react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import { getPageCount, concatPdfs } from "~/lib/pdf.client";
 import { generateNewFileName } from "~/lib/utils";
@@ -19,6 +20,8 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { useToast } from '~/hooks/use-toast';
 import { TooltipContent, TapableTooltip } from '~/components/ui/tooltip';
 
+const ANIMATION_DURATION = 100;
+
 interface FileSelection {
   file: File;
   id: string,
@@ -35,6 +38,7 @@ interface State {
 
 export default function PDFConcatenator() {
   const { toast } = useToast()
+  const [animationParent, setAnimationsEnabled] = useAutoAnimate({ duration: ANIMATION_DURATION });
   const [state, setState] = useState<State>({
     isDragging: false,
     isDefaultName: true,
@@ -151,14 +155,15 @@ export default function PDFConcatenator() {
                 <TableHead className="text-right"></TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody ref={animationParent}>
               {state.fileSelections.map((fileSelection, index) => (
                 <FileListingRow
                   key={fileSelection.id}
                   index={index}
                   fileSelection={fileSelection}
                   fileSelectionCount={state.fileSelections.length}
-                  setState={setState} />
+                  setState={setState}
+                  setAnimationsEnabled={setAnimationsEnabled} />
               ))}
             </TableBody>
           </Table>}
@@ -208,11 +213,13 @@ const FileListingRow = memo(
     fileSelection,
     fileSelectionCount,
     setState,
+    setAnimationsEnabled,
   }: {
     index: number,
     fileSelection: FileSelection,
     fileSelectionCount: number,
     setState: React.Dispatch<React.SetStateAction<State>>,
+    setAnimationsEnabled: (_: boolean) => void,
   }) {
 
     const moveUp = (index: number) => {
@@ -257,18 +264,26 @@ const FileListingRow = memo(
     };
 
     const onFileSelectionRemoved = (index: number) => {
-      setState((oldState) => {
-        const newFileSelections = [
-          ...oldState.fileSelections.slice(0, index),
-          ...oldState.fileSelections.slice(index + 1)
-        ];
+      try {
+        // The animations look bad for the deletion, so they should be temporarily disabled.
+        setAnimationsEnabled(false);
 
-        return {
-          ...oldState,
-          fileSelections: newFileSelections,
-          fileName: resolveFileName(oldState, newFileSelections)
-        };
-      });
+        setState((oldState) => {
+          const newFileSelections = [
+            ...oldState.fileSelections.slice(0, index),
+            ...oldState.fileSelections.slice(index + 1)
+          ];
+
+          return {
+            ...oldState,
+            fileSelections: newFileSelections,
+            fileName: resolveFileName(oldState, newFileSelections)
+          };
+        });
+      } finally {
+        // This needs some delay as otherwise the animations are enabled too fast.
+        setTimeout(() => setAnimationsEnabled(true), ANIMATION_DURATION);
+      }
     };
 
     return (
